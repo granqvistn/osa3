@@ -45,7 +45,7 @@ let persons = [
 ]
 
 app.get('/api/persons', (req, res) => {
-    Person.find({}).then(persons => {response.json(persons)})
+    Person.find({}).then(persons => {res.json(persons)})
 })
 
 app.get('/api/persons/:id', (req, res) => {
@@ -63,7 +63,7 @@ app.post('/api/persons', (req, res) => {
     
     const body = req.body
 
-    if(body.name === undefined || body.number === undefined) {
+    if(body.name === undefined) {
         return res.status(400).json({
             error: 'name or number is missing'
         })
