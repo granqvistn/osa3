@@ -77,12 +77,12 @@ app.post('/api/persons', (req, res) => {
 
     const person = {
         name : body.name,
-        number : body.number,
-        id : genID() 
+        number : body.number
     }
+    person.save().then(savedPerson => {
+        response.json(savedPerson)
+    })
     
-    persons = persons.concat(person)
-    res.json(person)
 })
 
 app.delete('/api/persons/:id', (req, res) => {
