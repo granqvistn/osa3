@@ -128,7 +128,7 @@ app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
 
-const errorHandler = (error, req, res, next) => {
+const errorHandler = (error, req, response, next) => {
     console.error(error.message)
   
     if (error.name === 'CastError') {
