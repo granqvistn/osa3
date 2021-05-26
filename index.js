@@ -100,7 +100,7 @@ app.delete('/api/persons/:id', (req, res, next) => {
 
 
 app.put('/api/persons/:id', (req, res, next) => {
-    const body = request.body
+    const body = req.body
   
     const person = {
       name: body.name,
