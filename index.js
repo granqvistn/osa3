@@ -57,6 +57,7 @@ app.get('/api/persons/:id', (req, response) => {
   .then(person => {
     response.json(person)
   })
+  .catch(error => next(error))
 
     //const id = Number(req.params.id) 
     //const person = persons.find(person => person.id === id)
@@ -76,11 +77,11 @@ app.post('/api/persons', (req, response, next) => {
     
     const body = req.body
 
-    if(body.name === undefined) {
-        return response.status(400).json({
-            error: 'name or number is missing'
-        })
-    }
+    //if(body.name === undefined) {
+    //    return response.status(400).json({
+    //        error: 'name or number is missing'
+    //    })
+    //}
 
     if(persons.find(pers => pers.name === body.name)){
         return response.status(400).json({
@@ -92,10 +93,12 @@ app.post('/api/persons', (req, response, next) => {
         name : body.name,
         number : body.number        
     })
-    person.save().then(savedPerson => {
-      response.json(savedPerson)
-    })
-    .catch(error => next(error))
+    person
+      .save()
+        .then(savedPerson => {
+          response.json(savedPerson)
+        })
+        .catch(error => next(error))
     
 })
 
