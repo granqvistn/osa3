@@ -44,18 +44,18 @@ let persons = [
       }
 ]
 
-app.get('/api/persons', (req, res, next) => {
+app.get('/api/persons', (req, response, next) => {
     Person.find({})
         .then(persons => {
-            res.json(persons)
+            response.json(persons)
         })
         .catch(error => next(error))
 })
 
-app.get('/api/persons/:id', (req, res) => {
+app.get('/api/persons/:id', (req, response) => {
   Person.findById(req.params.id)
   .then(person => {
-    res.json(person)
+    response.json(person)
   })
 
     //const id = Number(req.params.id) 
@@ -63,27 +63,27 @@ app.get('/api/persons/:id', (req, res) => {
     //res.json(person)
 })
 
-app.get('/info', (req, res) => {
+app.get('/info', (req, response) => {
     const date = new Date
     Person.find({})
     .then(persons => {
-      res.end(`Phonebook has info for ${persons.length} people \n${date}`)
+      response.end(`Phonebook has info for ${persons.length} people \n${date}`)
     })
     //res.end(`Phonebook has info for ${persons.length} people \n${date}`)
 })
 
-app.post('/api/persons', (req, res, next) => {
+app.post('/api/persons', (req, response, next) => {
     
     const body = req.body
 
     if(body.name === undefined) {
-        return res.status(400).json({
+        return response.status(400).json({
             error: 'name or number is missing'
         })
     }
 
     if(persons.find(pers => pers.name === body.name)){
-        return res.status(400).json({
+        return response.status(400).json({
             error: 'name must be unique'
         })
     }
@@ -93,22 +93,22 @@ app.post('/api/persons', (req, res, next) => {
         number : body.number        
     })
     person.save().then(savedPerson => {
-        res.json(savedPerson)
+      response.json(savedPerson)
     })
     .catch(error => next(error))
     
 })
 
-app.delete('/api/persons/:id', (req, res, next) => {
+app.delete('/api/persons/:id', (req, response, next) => {
     Person.findByIdAndRemove(req.params.id)
     .then(result => {
-      res.status(204).end()
+      response.status(204).end()
     })
     .catch(error => next(error))
 })
 
 
-app.put('/api/persons/:id', (req, res, next) => {
+app.put('/api/persons/:id', (req, response, next) => {
     const body = req.body
   
     const person = {
@@ -118,12 +118,12 @@ app.put('/api/persons/:id', (req, res, next) => {
   
     Person.findByIdAndUpdate(req.params.id, person, { new: true })
       .then(updatedPerson => {
-        res.json(updatedPerson)
+        response.json(updatedPerson)
       })
       .catch(error => next(error))
   })
 
-const PORT = process.env.PORT
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
@@ -132,9 +132,10 @@ const errorHandler = (error, req, res, next) => {
     console.error(error.message)
   
     if (error.name === 'CastError') {
-      return res.status(400).send({ error: 'malformatted id' })
+      return response.status(400).send({ error: 'malformatted id' })
     } else if (error.name === 'ValidationError') {
-      return res.status(400).json({error : error.message})
+      console.log(response)
+      return response.status(400).json({error : error.message})
     }
   
     next(error)
