@@ -2,6 +2,7 @@ const http = require('http')
 const express = require('express')
 const cors = require('cors')
 
+
 require('dotenv').config()
 
 var morgan = require('morgan')
@@ -55,7 +56,7 @@ app.get('/api/persons', (req, response, next) => {
 app.get('/api/persons/:id', (req, response) => {
   Person.findById(req.params.id)
   .then(person => {
-    response.json(person)
+    response.json(person.toJSON())
   })
   .catch(error => next(error))
 
@@ -76,12 +77,12 @@ app.get('/info', (req, response) => {
 app.post('/api/persons', (req, response, next) => {
     
     const body = req.body
-
-    //if(body.name === undefined) {
-    //    return response.status(400).json({
-    //        error: 'name or number is missing'
-    //    })
-    //}
+    console.log(body)
+    if(!body.name || !body.number) {
+        return response.status(400).json({
+            error: 'name or number is missing'
+        })
+    }
 
     if(persons.find(pers => pers.name === body.name)){
         return response.status(400).json({
@@ -96,7 +97,7 @@ app.post('/api/persons', (req, response, next) => {
     person
       .save()
         .then(savedPerson => {
-          response.json(savedPerson)
+          response.json(savedPerson.toJSON())
         })
         .catch(error => next(error))
     
@@ -126,10 +127,7 @@ app.put('/api/persons/:id', (req, response, next) => {
       .catch(error => next(error))
   })
 
-const PORT = process.env.PORT || 3001
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`)
-})
+
 
 const errorHandler = (error, req, response, next) => {
     console.error(error.message)
@@ -144,3 +142,9 @@ const errorHandler = (error, req, response, next) => {
     next(error)
   }
   app.use(errorHandler)
+
+
+  const PORT = process.env.PORT || 3001
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`)
+})
