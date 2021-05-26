@@ -99,7 +99,7 @@ app.delete('/api/persons/:id', (req, res, next) => {
 })
 
 
-app.put('/api/personsn/:id', (req, res, next) => {
+app.put('/api/persons/:id', (req, res, next) => {
     const body = request.body
   
     const person = {
